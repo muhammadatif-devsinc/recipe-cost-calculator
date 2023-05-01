@@ -1,0 +1,13 @@
+
+  {
+    "folders": [
+    { "path": "packages/client" },
+    { "path": "packages/server" },
+    { "path": ".", "name": "root" }
+  ],
+  "settings": {
+    "files.exclude": {
+      "packages": true
+    }
+  }
+}

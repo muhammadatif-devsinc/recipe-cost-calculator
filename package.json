@@ -1,0 +1,19 @@
+{
+  "name": "recipe-cost-calculator",
+  "version": "1.0.0",
+  "description": "recipe cost calculator monorepo",
+  "scripts": {
+    "start:dev": "pnpm --stream -r run start:dev",
+    "lint:fix": "pnpm --stream -r run lint:fix",
+    "lint": "pnpm --stream -r run lint",
+    "build": "pnpm --stream -r run build",
+    "prepare": "husky install"
+  },
+  "author": "muhammad.atif",
+  "devDependencies": {
+    "eslint": "^8.39.0",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.2.2",
+    "rimraf": "^5.0.0"
+  }
+}
