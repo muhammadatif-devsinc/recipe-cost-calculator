@@ -112,9 +112,7 @@ const initialState: RecipeIngredientAmount = {
   name: ''
 };
 
-const RecipeIngredientAmountList = (
-  props: RecipeIngredientAmountListProps
-): JSX.Element => {
+const RecipeIngredientAmountList = (props: RecipeIngredientAmountListProps): JSX.Element => {
   const [newIngredient, setNewIngredient] = useState(initialState);
   const [isAddingNew, setIsAddingNew] = useState(false);
 

@@ -1,11 +1,10 @@
 import type { RecipeIngredientPrice, RecipeIngredientPurchasePriceUpdate } from './types';
+import { type ChangeEvent, useState, useEffect } from 'react';
 import { StyledComponentProps } from '../../type-utils';
-import { type ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 
 const IngredientPriceListContainer = styled.div`
-  margin: auto 25px auto 25px;
-  flex-direction: column;
+  margin: auto 25px auto 25px; flex-direction: column;
   min-height: 500px;
   display: flex;
   padding: 30px;
@@ -41,6 +40,11 @@ const TableColumnInput = styled.input`
   text-align: center;
   font-size: 1.2rem;
   max-width: 50px;
+
+  &:focus {
+    border: 2px solid #000;
+    outline: none;
+  }
 `;
 
 const TableColumn = styled.div<StyledComponentProps<
@@ -53,8 +57,27 @@ const TableColumn = styled.div<StyledComponentProps<
   )};
 `;
 
+const IngredientPriceFooter = styled.div`
+  padding-top: 10px;
+`;
+
+const PriceFooterCostContainer = styled.div`
+  justify-content: space-between;
+  margin-top: 10px;
+  display: flex;
+`;
+
+const CalculateButton = styled.button`
+  font-size: 0.8rem;
+  min-width: 100px;
+  padding: 0.2rem;
+`
+
 interface RecipeIngredientPriceListProps {
   priceList: RecipeIngredientPrice[];
+  totalCost: number;
+  calculateTotalCost: () => void;
+  resetTotalCost: () => void;
   updateIngredientPrice: (
     name: string, 
     patch: RecipeIngredientPurchasePriceUpdate
@@ -70,6 +93,16 @@ const RecipeIngredientPriceList = (props: RecipeIngredientPriceListProps): JSX.E
   const [ingredientPricingUpdate, setIngredientPricingUpdate] = useState(initialState);
   const [ingredientNameWithFocus, setIngredientNameWithFocus] = useState('');
   const [isEditing, setIsEditing] = useState(false);
+
+  useEffect(() => props.resetTotalCost(), [props.priceList.length]);
+
+  const handleCalculateCostClicked = () => {
+    if (props.totalCost === 0) {
+      props.calculateTotalCost();
+    } else {
+      props.resetTotalCost();
+    }
+  }
 
   const getOnChangeHandlerFor = (ingredientName: string, propName: 'purchasePrice' | 'purchaseAmount') => {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -175,6 +208,15 @@ const RecipeIngredientPriceList = (props: RecipeIngredientPriceListProps): JSX.E
         </IngredientPriceListHeader>
       )}
       <Table>{props.priceList.map(renderTableRow)}</Table>
+      <IngredientPriceFooter>
+        <h3>Recipe Cost</h3>
+        <PriceFooterCostContainer>
+        <h2>${(props.totalCost === 0) ? '#.###' : props.totalCost.toFixed(3)}</h2>
+        <CalculateButton onClick={handleCalculateCostClicked}>
+          {(props.totalCost === 0) ? 'Calculate' : 'Reset'}
+        </CalculateButton>
+        </PriceFooterCostContainer>
+      </IngredientPriceFooter>
     </IngredientPriceListContainer>
   )
 }

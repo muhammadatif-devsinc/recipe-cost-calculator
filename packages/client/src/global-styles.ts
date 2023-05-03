@@ -18,7 +18,7 @@ const GlobalStyle = createGlobalStyle`
     -moz-appearance: textfield;
   }
 
-  body, button, input {
+  body, button, input, h2, h3 {
     font-family: "Indie Flower";
     padding: 0;
     margin: 0;

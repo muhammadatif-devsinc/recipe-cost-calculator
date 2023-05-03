@@ -29,6 +29,7 @@ const CostCalculatorIngredientsContainer = styled.div`
 const RecipeCostCalculator = (): JSX.Element => {
   const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredient[]>([]);
   const [recipeName, setRecipeName] = useState<string>('');
+  const [totalCost, setTotalCost] = useState(0);
 
   const [recipeAmountList, recipePriceList] = useMemo(() => {
     const amountList = recipeIngredients.map<RecipeIngredientAmount>(
@@ -69,6 +70,18 @@ const RecipeCostCalculator = (): JSX.Element => {
     ));
   }
 
+  const calculateTotalCost = () => {
+    const calculatedTotalCost = recipeIngredients.reduce(
+      (costSum, ingredient) => {
+        const { purchaseAmount, purchasePrice, recipeAmount } = ingredient;
+        if (purchaseAmount === 0) return costSum;
+        const unitCost = purchasePrice / purchaseAmount;
+        return costSum + (recipeAmount * unitCost);
+      }, 0
+    );
+    setTotalCost(calculatedTotalCost);
+  }
+
   const updateIngredientPurchasePriceInfo = (
     name: string, payload: RecipeIngredientPurchasePriceUpdate
   ): void => {
@@ -101,7 +114,10 @@ const RecipeCostCalculator = (): JSX.Element => {
         />
         <RecipeIngredientPriceList 
           updateIngredientPrice={updateIngredientPurchasePriceInfo}
+          calculateTotalCost={calculateTotalCost}
+          resetTotalCost={() => setTotalCost(0)}
           priceList={recipePriceList}
+          totalCost={totalCost}
         />
       </CostCalculatorIngredientsContainer>
     </CostCalculatorContainer>
