@@ -5,7 +5,10 @@
     "module": "commonjs",
     "lib": ["es2022"],
     "esModuleInterop": true,
-    "outDir": "dist"
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "dist",
   },
   "exclude": ["node_modules"],
   "include": ["./src"],

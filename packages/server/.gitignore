@@ -1,0 +1,4 @@
+# environment variable files
+.env.development
+.env.production
+.env

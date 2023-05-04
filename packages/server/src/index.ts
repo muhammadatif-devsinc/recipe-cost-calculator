@@ -1,25 +1,22 @@
-import { DevServerPort } from './config';
+import { initializeAppDataSource } from './database';
+import * as utilities from './utilities';
 import type { Express } from 'express';
+import * as config from './config';
 import express from 'express';
 import http from 'http';
 
-const createHttpServer = (app: Express): http.Server => {
-  const server = http.createServer(app);
-  server.on('listening', () => {
-    console.log(`listening to server on PORT ${DevServerPort}`);
-  });
-  server.on('error', error => {
-    console.log('closing server owing to error', error.message);
-    server.close();
-  });
-  return server;
-};
-
 const createExpressApp = (): Express => {
   const app = express();
-  app.all('*', (_, response) => response.send('@rcc/server'));
+  app.use(express.urlencoded({ extended: false }));
+  app.use(express.json());
   return app;
 };
 
-createHttpServer(createExpressApp())
-  .listen(DevServerPort);
+const init = async (): Promise<void> => {
+  await initializeAppDataSource();
+  const server = http.createServer(createExpressApp());
+  utilities.attachServerCallbacks(server);
+  server.listen(config.AppServerPort);
+};
+
+void init();
