@@ -9,8 +9,8 @@ parserOptions:
   sourceType: module
 ignorePatterns:
   - dist
+  - dist-cjs
 rules:
   '@typescript-eslint/no-non-null-assertion': off
-  '@typescript-eslint/no-misused-promises': off
   '@typescript-eslint/semi': off
   semi: [1, always]
