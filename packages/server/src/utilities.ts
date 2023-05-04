@@ -1,8 +1,16 @@
+import type { NextFunction as NextFn, Request, Response } from 'express';
 import { type ApiError } from './ApiError';
 import { type HttpStatus } from './types';
 import { AppServerPort } from './config';
-import type { Response } from 'express';
 import type http from 'http';
+
+export const withRouteErrorHandler = (
+  routeHandlerFn: (req: Request, res: Response) => Promise<void>
+) => {
+  return (req: Request, res: Response, next: NextFn) => {
+    routeHandlerFn(req, res).catch(error => { next(error); });
+  };
+};
 
 export const errorResponse = (res: Response, error: ApiError): void => {
   res.status(error.statusCode as number);
