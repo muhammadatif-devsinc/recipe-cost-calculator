@@ -1,3 +1,4 @@
+import * as globalMiddlewares from './global-middlewares';
 import { initializeAppDataSource } from './database';
 import * as utilities from './utilities';
 import type { Express } from 'express';
@@ -9,6 +10,8 @@ const createExpressApp = (): Express => {
   const app = express();
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use('*', globalMiddlewares.global404());
+  app.use(globalMiddlewares.globalError());
   return app;
 };
 
