@@ -9,6 +9,7 @@ import http from 'http';
 
 const createExpressApp = (): Express => {
   const app = express();
+  app.use(globalMiddlewares.globalCors());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
   app.use('/api/v1/recipe', controllers.recipe);

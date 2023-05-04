@@ -1,0 +1,7 @@
+# environment variable files
+.env.development
+.env.production
+.env
+
+# package build
+/dist
