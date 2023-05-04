@@ -3,7 +3,8 @@
   "version": "1.0.0",
   "description": "recipe cost calculator monorepo",
   "scripts": {
-    "start:dev": "pnpm --stream -r run start:dev",
+    "postinstall": "pnpm --filter @rcc/shared run build",
+    "start:dev": "pnpm --stream --parallel run start:dev",
     "lint:fix": "pnpm --stream -r run lint:fix",
     "lint": "pnpm --stream -r run lint",
     "build": "pnpm --stream -r run build",
