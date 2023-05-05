@@ -119,6 +119,37 @@ importers:
         specifier: ^5.0.4
         version: 5.0.4
 
+  packages/shared:
+    dependencies:
+      zod:
+        specifier: ^3.21.4
+        version: 3.21.4
+    devDependencies:
+      '@tsconfig/node18':
+        specifier: ^2.0.0
+        version: 2.0.0
+      '@typescript-eslint/eslint-plugin':
+        specifier: ^5.59.2
+        version: 5.59.2(@typescript-eslint/parser@5.59.2)(eslint@8.39.0)(typescript@5.0.4)
+      eslint:
+        specifier: ^8.39.0
+        version: 8.39.0
+      eslint-config-standard-with-typescript:
+        specifier: ^34.0.1
+        version: 34.0.1(@typescript-eslint/eslint-plugin@5.59.2)(eslint-plugin-import@2.27.5)(eslint-plugin-n@15.7.0)(eslint-plugin-promise@6.1.1)(eslint@8.39.0)(typescript@5.0.4)
+      eslint-plugin-import:
+        specifier: ^2.27.5
+        version: 2.27.5(@typescript-eslint/parser@5.59.2)(eslint@8.39.0)
+      eslint-plugin-n:
+        specifier: ^15.7.0
+        version: 15.7.0(eslint@8.39.0)
+      eslint-plugin-promise:
+        specifier: ^6.1.1
+        version: 6.1.1(eslint@8.39.0)
+      typescript:
+        specifier: ^5.0.4
+        version: 5.0.4
+
 packages:
 
   /@ampproject/remapping@2.2.1:
@@ -4023,3 +4054,7 @@ packages:
     resolution: {integrity: sha512-rVksvsnNCdJ/ohGc6xgPwyN8eheCxsiLM8mxuE/t/mOVqJewPuO1miLpTHQiRgTKCLexL4MeAFVagts7HmNZ2Q==}
     engines: {node: '>=10'}
     dev: true
+
+  /zod@3.21.4:
+    resolution: {integrity: sha512-m46AKbrzKVzOzs/DZgVnG5H55N1sv1M8qZU3A8RIKbs3mrACDNeIOeilDymVb2HdmP8uwshOCF4uJ8uM9rCqJw==}
+    dev: false

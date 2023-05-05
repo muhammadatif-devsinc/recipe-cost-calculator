@@ -1,0 +1,16 @@
+{
+  "extends": "@tsconfig/node18/tsconfig.json",
+  "compilerOptions": {
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2022", "dom"],
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "experimentalDecorators": true,
+    "declaration": true,
+    "emitDecoratorMetadata": true,
+    "outDir": "dist",
+  },
+  "exclude": ["node_modules"],
+  "include": ["./src"],
+}
