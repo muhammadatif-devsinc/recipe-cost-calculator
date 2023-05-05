@@ -1,7 +1,9 @@
 import RecipeIngredientAmountList from './RecipeIngredientAmountList';
 import RecipeIngredientPriceList from './RecipeIngredientPriceList';
+import { useMemo, useState, useEffect, Fragment } from 'react';
+import * as apiService from '../../api-service';
 import RecipeNameInput from './RecipeNameInput';
-import { useMemo, useState } from 'react';
+import * as utilities from '../../utilities';
 import styled from 'styled-components';
 
 import type { 
@@ -28,6 +30,7 @@ const CostCalculatorIngredientsContainer = styled.div`
 
 const RecipeCostCalculator = (): JSX.Element => {
   const [recipeIngredients, setRecipeIngredients] = useState<RecipeIngredient[]>([]);
+  const [isFetchingRecipe, setIsFetchingRecipe] = useState(true);
   const [recipeName, setRecipeName] = useState<string>('');
   const [totalCost, setTotalCost] = useState(0);
 
@@ -50,6 +53,10 @@ const RecipeCostCalculator = (): JSX.Element => {
     return [amountList, priceList];
   }, [recipeIngredients]);
 
+  useEffect(() => {
+    setTotalCost(utilities.calculateRecipeCost(recipeIngredients));
+  }, [recipeIngredients]);
+
   const addIngredient = (name: string, amount: number): void => {
     setRecipeIngredients(currentState => ([
       ...currentState,
@@ -70,18 +77,6 @@ const RecipeCostCalculator = (): JSX.Element => {
     ));
   }
 
-  const calculateTotalCost = () => {
-    const calculatedTotalCost = recipeIngredients.reduce(
-      (costSum, ingredient) => {
-        const { purchaseAmount, purchasePrice, recipeAmount } = ingredient;
-        if (purchaseAmount === 0) return costSum;
-        const unitCost = purchasePrice / purchaseAmount;
-        return costSum + (recipeAmount * unitCost);
-      }, 0
-    );
-    setTotalCost(calculatedTotalCost);
-  }
-
   const updateIngredientPurchasePriceInfo = (
     name: string, payload: RecipeIngredientPurchasePriceUpdate
   ): void => {
@@ -98,28 +93,52 @@ const RecipeCostCalculator = (): JSX.Element => {
         ...currentState.slice(targetIndex + 1)
       ];
     });
-  }
+  };
+
+  const fetchLastRecipe = async (): Promise<void> => {
+    const [error, recipeType] = await apiService.getLastRecipe();
+    if ((error !== null) || (recipeType === null)) return;
+    const { recipeName, ingredients } = utilities.toRecipe(recipeType);
+    setTotalCost(utilities.calculateRecipeCost(ingredients));
+    setRecipeIngredients(ingredients);
+    setRecipeName(recipeName);
+    setTimeout(() => { setIsFetchingRecipe(false); }, 0);
+  };
+
+  useEffect(() => {
+    void fetchLastRecipe();
+  }, []);
+
+  const saveRecipe = async (): Promise<void> => {
+    const calculatedTotalCost = utilities.calculateRecipeCost(recipeIngredients);
+    setTotalCost(calculatedTotalCost);
+    const recipeType = utilities.toRecipeType(recipeName, recipeIngredients);
+    await apiService.createOrSaveRecipe(recipeType);
+  };
 
   return (
     <CostCalculatorContainer>
-      <RecipeNameInput
-        setRecipeName={setRecipeName}
-        recipeName={recipeName}
-      />
-      <CostCalculatorIngredientsContainer> 
-        <RecipeIngredientAmountList 
-          removeIngredient={removeIngredient}
-          addIngredient={addIngredient}
-          amountList={recipeAmountList}
-        />
-        <RecipeIngredientPriceList 
-          updateIngredientPrice={updateIngredientPurchasePriceInfo}
-          calculateTotalCost={calculateTotalCost}
-          resetTotalCost={() => setTotalCost(0)}
-          priceList={recipePriceList}
-          totalCost={totalCost}
-        />
-      </CostCalculatorIngredientsContainer>
+      {isFetchingRecipe ? (<h1>Loading ...</h1>) : (
+        <Fragment>
+          <RecipeNameInput
+            setRecipeName={setRecipeName}
+            recipeName={recipeName}
+          />
+          <CostCalculatorIngredientsContainer>
+            <RecipeIngredientAmountList
+              removeIngredient={removeIngredient}
+              addIngredient={addIngredient}
+              amountList={recipeAmountList}
+            />
+            <RecipeIngredientPriceList
+              updateIngredientPrice={updateIngredientPurchasePriceInfo}
+              priceList={recipePriceList}
+              saveRecipe={saveRecipe}
+              totalCost={totalCost}
+            />
+          </CostCalculatorIngredientsContainer>
+        </Fragment>
+      )}
     </CostCalculatorContainer>
   );
 };

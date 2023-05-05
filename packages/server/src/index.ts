@@ -12,6 +12,7 @@ const createExpressApp = (): Express => {
   app.use(globalMiddlewares.globalCors());
   app.use(express.urlencoded({ extended: false }));
   app.use(express.json());
+  app.use(globalMiddlewares.globalSlow());
   app.use('/api/v1/recipe', controllers.recipe);
   app.use('*', globalMiddlewares.global404());
   app.use(globalMiddlewares.globalError());

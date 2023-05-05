@@ -20,6 +20,14 @@ export const global404 = () => {
   };
 };
 
+export const globalSlow = () => {
+  return async (_: Request, __: Response, next: NextFn) => {
+    const delay = Math.round(Math.random() * 1000);
+    await new Promise(resolve => setTimeout(resolve, delay));
+    next();
+  };
+};
+
 export const globalCors = (): ReturnType<typeof cors> => {
   return cors({
     origin: (origin, callbackFn) => {

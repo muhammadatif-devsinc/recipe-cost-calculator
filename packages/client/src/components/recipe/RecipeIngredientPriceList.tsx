@@ -1,6 +1,6 @@
 import type { RecipeIngredientPrice, RecipeIngredientPurchasePriceUpdate } from './types';
-import { type ChangeEvent, useState, useEffect } from 'react';
 import { StyledComponentProps } from '../../type-utils';
+import { type ChangeEvent, useState } from 'react';
 import styled from 'styled-components';
 
 const IngredientPriceListContainer = styled.div`
@@ -67,17 +67,16 @@ const PriceFooterCostContainer = styled.div`
   display: flex;
 `;
 
-const CalculateButton = styled.button`
+const SaveButton = styled.button`
   font-size: 0.8rem;
   min-width: 100px;
   padding: 0.2rem;
 `
 
 interface RecipeIngredientPriceListProps {
-  priceList: RecipeIngredientPrice[];
-  totalCost: number;
-  calculateTotalCost: () => void;
-  resetTotalCost: () => void;
+  priceList: RecipeIngredientPrice[]
+  totalCost: number
+  saveRecipe: () => Promise<void>
   updateIngredientPrice: (
     name: string, 
     patch: RecipeIngredientPurchasePriceUpdate
@@ -92,17 +91,14 @@ const initialState: RecipeIngredientPurchasePriceUpdate = {
 const RecipeIngredientPriceList = (props: RecipeIngredientPriceListProps): JSX.Element => {
   const [ingredientPricingUpdate, setIngredientPricingUpdate] = useState(initialState);
   const [ingredientNameWithFocus, setIngredientNameWithFocus] = useState('');
+  const [isSavingRecipe, setIsSavingRecipe] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  useEffect(() => props.resetTotalCost(), [props.priceList.length]);
-
-  const handleCalculateCostClicked = () => {
-    if (props.totalCost === 0) {
-      props.calculateTotalCost();
-    } else {
-      props.resetTotalCost();
-    }
-  }
+  const handleSaveRecipeClicked = async () => {
+    setIsSavingRecipe(true);
+    await props.saveRecipe();
+    setIsSavingRecipe(false);
+  };
 
   const getOnChangeHandlerFor = (ingredientName: string, propName: 'purchasePrice' | 'purchaseAmount') => {
     return (event: ChangeEvent<HTMLInputElement>) => {
@@ -212,9 +208,9 @@ const RecipeIngredientPriceList = (props: RecipeIngredientPriceListProps): JSX.E
         <h3>Recipe Cost</h3>
         <PriceFooterCostContainer>
         <h2>${(props.totalCost === 0) ? '#.###' : props.totalCost.toFixed(3)}</h2>
-        <CalculateButton onClick={handleCalculateCostClicked}>
-          {(props.totalCost === 0) ? 'Calculate' : 'Reset'}
-        </CalculateButton>
+        <SaveButton onClick={handleSaveRecipeClicked}>
+          {isSavingRecipe ? 'Saving ...' : 'Save'}
+        </SaveButton>
         </PriceFooterCostContainer>
       </IngredientPriceFooter>
     </IngredientPriceListContainer>

@@ -1,7 +1,7 @@
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { type ChangeEvent, type FormEvent, useState, useEffect } from 'react';
 import { HiOutlinePencil as EditingIcon } from 'react-icons/hi';
 import type { StyledComponentProps } from '../../type-utils';
-import { MdDone  as CompletedIcon } from 'react-icons/md';
+import { MdDone as CompletedIcon } from 'react-icons/md';
 import * as constants from '../../constants';
 import styled from 'styled-components';
 
@@ -56,6 +56,12 @@ const RecipeNameInput = (props: RecipeNameIputProps): JSX.Element => {
   const handleOnChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setInputText(event.target.value);
   };
+
+  useEffect(() => {
+    if (!isEditing) {
+      setInputText(props.recipeName);
+    }
+  }, [props.recipeName, isEditing]);
 
   const handleOnSubmit = (event: FormEvent): void => {
     event.preventDefault();

@@ -6,14 +6,14 @@ import { Router } from 'express';
 const router = Router();
 
 router.get(
-  '/:recipeName',
-  withRouteErrorHandler(handlers.getRecipe)
+  '/',
+  withRouteErrorHandler(handlers.getLastRecipe)
 );
 
 router.post(
   '/',
   validators.createRecipeValidator(),
-  withRouteErrorHandler(handlers.createRecipe)
+  withRouteErrorHandler(handlers.createOrSaveRecipe)
 );
 
 export default router;
