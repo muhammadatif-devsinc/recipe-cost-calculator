@@ -97,7 +97,11 @@ const RecipeCostCalculator = (): JSX.Element => {
 
   const fetchLastRecipe = async (): Promise<void> => {
     const [error, recipeType] = await apiService.getLastRecipe();
-    if ((error !== null) || (recipeType === null)) return;
+    if ((error !== null) || (recipeType === null)) {
+      setIsFetchingRecipe(false);
+      return;
+    }
+
     const { recipeName, ingredients } = utilities.toRecipe(recipeType);
     setTotalCost(utilities.calculateRecipeCost(ingredients));
     setRecipeIngredients(ingredients);
