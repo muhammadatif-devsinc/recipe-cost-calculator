@@ -1,8 +1,8 @@
 import { Recipe, RecipeEntry, Ingredient } from './entities';
-import { type RecipeDTO } from '../controllers';
 import { AppDataSource } from './data-source';
+import type { RecipeType } from '@rcc/shared';
 
-export const createRecipe = async (payload: RecipeDTO, clearTables: boolean = false): Promise<Recipe> => {
+export const createRecipe = async (payload: RecipeType, clearTables: boolean = false): Promise<Recipe> => {
   return await AppDataSource.manager.transaction(async (manager) => {
     const recipeEntryRepo = manager.getRepository(RecipeEntry);
     const ingredientRepo = manager.getRepository(Ingredient);

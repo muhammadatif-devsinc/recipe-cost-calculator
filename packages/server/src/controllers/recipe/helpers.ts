@@ -1,7 +1,7 @@
+import { type RecipeType } from '@rcc/shared';
 import { type Recipe } from '../../database';
-import type { RecipeDTO } from './dtos';
 
-export const toRecipeDTO = (recipe: Recipe): RecipeDTO => {
+export const toRecipeType = (recipe: Recipe): RecipeType => {
   const { recipeName } = recipe;
   const ingredients = recipe.recipeEntries
     .reduce((result, recipeEntry) => {

@@ -5,7 +5,8 @@ import httpStatus from 'http-status';
 
 export const globalError = () => {
   return (error: Error, _: Request, response: Response, __: NextFn) => {
-    const apiError = ApiError.fromError(error);
+    const isApiError = error instanceof ApiError;
+    const apiError = !isApiError ? ApiError.fromError(error) : error;
     utilities.errorResponse(response, apiError);
   };
 };

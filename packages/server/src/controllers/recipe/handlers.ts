@@ -2,8 +2,8 @@ import { AppDataSource, trasactions, Recipe } from '../../database';
 import { successResponse } from '../../utilities';
 import type { Request, Response } from 'express';
 import { ApiError } from '../../ApiError';
-import { type RecipeDTO } from './dtos';
-import { toRecipeDTO } from './helpers';
+import { toRecipeType } from './helpers';
+import { type RecipeType } from '@rcc/shared';
 import httpStatus from 'http-status';
 
 export const getRecipe = async (req: Request, res: Response): Promise<void> => {
@@ -22,13 +22,13 @@ export const getRecipe = async (req: Request, res: Response): Promise<void> => {
     );
   }
 
-  const recipeDTO = toRecipeDTO(recipe);
+  const recipeDTO = toRecipeType(recipe);
   successResponse(res, recipeDTO, 200);
 };
 
 export const createRecipe = async (req: Request, res: Response): Promise<void> => {
-  const payload: RecipeDTO = req.body;
+  const payload: RecipeType = req.body;
   const recipe = await trasactions.createRecipe(payload, true);
-  const recipeDTO = toRecipeDTO(recipe);
+  const recipeDTO = toRecipeType(recipe);
   successResponse(res, recipeDTO, 201);
 };
