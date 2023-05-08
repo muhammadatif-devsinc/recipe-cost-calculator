@@ -1,8 +1,8 @@
 import type { HttpStatus } from './types';
 
 export class ApiError extends Error {
-  constructor (public messages: string, public statusCode?: HttpStatus) {
-    super();
+  constructor (public message: string, public statusCode?: HttpStatus) {
+    super(message);
     this.statusCode = statusCode ?? 500;
     this.name = 'ApiError';
   }
