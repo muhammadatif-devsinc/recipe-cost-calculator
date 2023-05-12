@@ -5,6 +5,7 @@
   "scripts": {
     "postinstall": "pnpm --filter @rcc/shared run build",
     "start:dev": "pnpm --stream --parallel run start:dev",
+    "db:seed": "pnpm --filter @rcc/server run db:seed",
     "lint:fix": "pnpm --stream -r run lint:fix",
     "lint": "pnpm --stream -r run lint",
     "build": "pnpm --stream -r run build",
