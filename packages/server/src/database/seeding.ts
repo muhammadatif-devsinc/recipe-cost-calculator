@@ -1,4 +1,5 @@
-import { initializeAppDataSource } from './data-source';
+import { AppDataSource, initializeAppDataSource } from './data-source';
+import { Recipe } from './entities';
 import { createRecipe } from './transactions';
 import type { RecipeType } from '@rcc/shared';
 
@@ -43,12 +44,26 @@ const recipe: RecipeType = {
   }
 };
 
+const getRecipeCount = async (): Promise<number> => {
+  const recipeRepo = AppDataSource.getRepository(Recipe);
+  return await recipeRepo.count();
+};
+
 const seedDatabase = async (): Promise<void> => {
+  let recipeExists: boolean = false;
+
   try {
     await initializeAppDataSource();
-    await createRecipe(recipe, true);
+    recipeExists = (await getRecipeCount()) > 0;
+    if (!recipeExists) await createRecipe(recipe, true);
   } catch (error) {
     console.error(error);
+  } finally {
+    const message = recipeExists
+      ? 'A Recipe already exists aborting seeding operation !'
+      : 'Created new recipe since none exists currently !';
+
+    console.log(message);
   }
 };
 
