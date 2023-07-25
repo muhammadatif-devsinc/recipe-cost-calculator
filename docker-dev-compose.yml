@@ -1,0 +1,44 @@
+version: "2.19.1"
+
+services:
+  rcc_postgres:
+    container_name: rcc-postgres
+    image: postgres:latest
+    volumes:
+      - ./assets/docker/development/rcc-postgres:/docker-entrypoint-initdb.d
+      - ./.rcc-postgres-data:/var/lib/postgresql/data/
+    expose:
+      - 5432
+    env_file:
+      - ./packages/server/.env.development
+      - ./.env.docker.development
+
+  rcc_node_seeder:
+    container_name: rcc-node-seeder
+    build: 
+      context: ./assets/docker/development/rcc-node
+      dockerfile: dockerfile
+    volumes:
+       - ./:/app
+    command: pnpm db:seed
+    depends_on:
+      - rcc_postgres
+    env_file:
+      - ./packages/server/.env.development
+
+  rcc_node_monoapp:
+    container_name: rcc-node-monoapp
+    build: 
+      context: ./assets/docker/development/rcc-node
+      dockerfile: dockerfile
+    volumes:
+       - ./:/app
+    ports: 
+      - 8080:8080
+      - 8081:8081
+    depends_on:
+      - rcc_postgres
+      - rcc_node_seeder
+    env_file:
+      - ./packages/client/.env.development
+      - ./packages/server/.env.development
