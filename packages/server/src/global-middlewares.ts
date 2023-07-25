@@ -31,11 +31,12 @@ export const globalSlow = () => {
 export const globalCors = (): ReturnType<typeof cors> => {
   return cors({
     origin: (origin, callbackFn) => {
-      const isLocalhost = origin === '';
-      if (!isLocalhost && AppWhiteListedDomains.includes(origin!)) {
+      const isLocalhost = origin === undefined;
+      if (!isLocalhost && AppWhiteListedDomains.includes(origin)) {
         callbackFn(null, true);
       } else {
-        callbackFn(new ApiError(`${origin!} is not a whitelisted domain`, 400));
+        const domain = isLocalhost ? 'localhost' : origin;
+        callbackFn(new ApiError(`${domain} is not a whitelisted domain`, 400));
       }
     }
   });
