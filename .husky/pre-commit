@@ -1,3 +1,2 @@
 #!/bin/bash
-
 pnpm -r exec lint-staged
