@@ -16,8 +16,8 @@ services:
   rcc_node_seeder:
     container_name: rcc-node-seeder
     build: 
-      context: ./assets/docker/development/rcc-node
-      dockerfile: dockerfile
+      context: ./assets/docker/development
+      dockerfile: rcc-node.Dockerfile
     volumes:
        - ./:/app
     command: pnpm db:seed
@@ -29,8 +29,8 @@ services:
   rcc_node_monoapp:
     container_name: rcc-node-monoapp
     build: 
-      context: ./assets/docker/development/rcc-node
-      dockerfile: dockerfile
+      context: ./assets/docker/development
+      dockerfile: rcc-node.Dockerfile
     volumes:
        - ./:/app
     ports: 
