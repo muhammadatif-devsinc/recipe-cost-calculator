@@ -9,7 +9,9 @@
     "lint:fix": "pnpm --stream -r run lint:fix",
     "lint": "pnpm --stream -r run lint",
     "build": "pnpm --stream -r run build",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "docker-compose:down": "docker compose -f docker-dev-compose.yml down",
+    "docker-compose:up": "docker compose -f docker-dev-compose.yml up"
   },
   "author": "muhammad.atif",
   "devDependencies": {

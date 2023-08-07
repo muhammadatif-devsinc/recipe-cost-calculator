@@ -1,0 +1,5 @@
+# ignore the following when mounting volumes
+.rcc-postgres-data
+assets
+docker-dev-compose.yml
+README.md
