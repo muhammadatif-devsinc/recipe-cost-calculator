@@ -8,5 +8,4 @@ apk add nodejs && apk add npm && npm -g install pnpm && \
 echo "enable-pre-post-scripts=true" >> ~/.npmrc
 
 WORKDIR /app
-
 CMD ["pnpm", "start:dev"]

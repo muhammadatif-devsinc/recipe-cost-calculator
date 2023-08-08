@@ -1,0 +1,54 @@
+name: Build and push repository packages to DockerHub
+on: 
+  push:
+    branches: 
+      - devops/dockerhub-pipeline
+      - master
+env:
+  DOCKERFILE_DIRECTORY: ./assets/docker/production
+  DOCKERHUB_PASSWORD: ${{secrets.DOCKERHUB_ACCESS_TOKEN}} 
+  DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}} 
+
+jobs:
+  main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checking out repository to actions pipeline
+        uses: actions/checkout@v3
+
+      - name:  Provising required version of node and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.16.1
+
+      - name: Installing PNPM and project dependencies
+        run: |
+          npm install --location=global pnpm 
+          echo "enable-pre-post-scripts=true" >> ~/.npmrc
+          pnpm install
+
+      - name: Running unit-test suites and building packages
+        run: pnpm test && pnpm build
+
+      - name: Logging into DockerHub using access token
+        shell: bash
+        run: |
+          docker login \
+          --username $DOCKERHUB_USERNAME \
+          --password $DOCKERHUB_PASSWORD
+
+      - name: Building Docker images for repository packages
+        shell: bash
+        run: |
+          docker build -t $DOCKERHUB_USERNAME/rcc-server \
+          --file $DOCKERFILE_DIRECTORY/rcc-server.Dockerfile \
+          ./packages/server
+
+          docker build -t $DOCKERHUB_USERNAME/rcc-client \
+          --file $DOCKERFILE_DIRECTORY/rcc-client.Dockerfile \
+          ./packages/client
+
+      - name: Pushing built images to DockerHub
+        run: |
+          docker push $DOCKERHUB_USERNAME/rcc-server:latest
+          docker push $DOCKERHUB_USERNAME/rcc-client:latest

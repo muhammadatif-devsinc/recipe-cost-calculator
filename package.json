@@ -9,6 +9,7 @@
     "lint:fix": "pnpm --stream -r run lint:fix",
     "lint": "pnpm --stream -r run lint",
     "build": "pnpm --stream -r run build",
+    "test": "echo \"no tests\"",
     "prepare": "husky install",
     "docker-compose:down": "docker compose -f docker-dev-compose.yml down",
     "docker-compose:up": "docker compose -f docker-dev-compose.yml up"
