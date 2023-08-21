@@ -5,7 +5,7 @@ on:
       - devops/dockerhub-pipeline
       - master
 env:
-  DOCKERFILE_DIRECTORY: ./assets/docker/production
+  DOCKERFILE_PATH: ./assets/docker/production/rcc-monoapp.Dockerfile
   DOCKERHUB_PASSWORD: ${{secrets.DOCKERHUB_ACCESS_TOKEN}} 
   DOCKERHUB_USERNAME: ${{secrets.DOCKERHUB_USERNAME}} 
 
@@ -41,12 +41,10 @@ jobs:
         shell: bash
         run: |
           docker build -t $DOCKERHUB_USERNAME/rcc-server \
-          --file $DOCKERFILE_DIRECTORY/rcc-server.Dockerfile \
-          ./packages/server
+          --file $DOCKERFILE_PATH --target rcc-server .
 
           docker build -t $DOCKERHUB_USERNAME/rcc-client \
-          --file $DOCKERFILE_DIRECTORY/rcc-client.Dockerfile \
-          ./packages/client
+          --file $DOCKERFILE_PATH --target rcc-client .
 
       - name: Pushing built images to DockerHub
         run: |
